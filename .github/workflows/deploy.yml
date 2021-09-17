@@ -3,8 +3,9 @@ name: Deploy
 on:
   push:
     paths:
-      - '**.gmi'
-      - '**.html'
+      - "**.gmi"
+      - "**.html"
+      - "**.yml"
   workflow_dispatch:
 
 jobs:
@@ -13,18 +14,34 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Install requirements
+        run: |
+          curl -sO https://notabug.org/tinyrabbit/gmi2html/raw/master/gmi2html
+          chmod +x gmi2html
+          echo "  <style>" > style
+          curl -s https://eggplants.github.io/gemini/style2.css >> style
+          echo "  </style>" >> style
       - name: Convert *.gmi to *.html
         run: |
           mkdir -p ./pub/htm
-          curl -sO https://notabug.org/tinyrabbit/gmi2html/raw/master/gmi2html
-          chmod +x gmi2html
           find pub/gmi/* -type d | sed 's_/gmi/_/htm/_' | xargs mkdir -p
           find -name "*.gmi" -type f | while read -r i; do
             o="$(echo "${i/\.gmi/.html}" | sed 's_/gmi/_/htm/_')"
-            echo "$i->$o"
-            ./gmi2html "$i" > "$o"
+            echo "$i -> $o"
+            echo '
+          <!DOCTYPE html>
+          <head>
+            <meta charset="utf-8"/>' >> "$o"
+          cat style >> "$o"           
+          echo '  <title>'"$(basename "$i" | sed "s/\.gmi\$//")"'</title>
+          </head>
+          <body>' >> "$o"
+            sed 's_\.gmi_.html_g;s_=> gemini://_=> https://_g' "$i" | ./gmi2html --inline-img >> "$o"
+            echo "</body></html>" >> "$o"
           done
-          rm gmi2html ./pub/gmi/.gitkeep ./pub/htm/.gitkeep
+      - name: Remove useless files
+        run: |
+          rm gmi2html ./pub/htm/.gitkeep
       - name: Check
         run: find pub -type f
       - name: Archive html + gmi files into tar
