@@ -1,4 +1,6 @@
-# gemini
+# gemini-template
+
+[See my sample repo](https://github.com/eggplants/gemini)
 
 ## WHAT?
 
