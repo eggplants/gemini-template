@@ -4,7 +4,7 @@
 
 ## WHAT?
 
-- Publish gmi documents to sourcehut automatically:
+- Publish [Gemtext](https://gemini.circumlunar.space/docs/gemtext.gmi) to sourcehut automatically:
   - `gemini://${USERNAME}.srht.site`
   - `https://${USERNAME}.srht.site`
 
