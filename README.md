@@ -21,7 +21,7 @@
 
 ## Badges
 
-```txt
+```markdown
 󠀭󠀭[![Deploy](https://github.com/{name}/{repo}/actions/workflows/deploy.yml/badge.svg)](https://github.com/{name}/{repo}/actions/workflows/deploy.yml)
 [![Website](https://img.shields.io/website?label=HTTPS&url=https%3A%2F%2F{name}.srht.site)](https://{name}.srht.site)
 ```
